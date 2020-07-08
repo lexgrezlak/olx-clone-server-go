@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
-	"olx-clone-server/database"
+	"olx-clone-server/internal/database"
 	"os"
 )
 
@@ -23,13 +23,13 @@ func main() {
 	}
 	defer db.Close(ctx)
 
-	var email string
-	err = db.Pool.QueryRow(ctx, "SELECT email FROM user").Scan(&email);
+	var title string
+	err = db.Pool.QueryRow(ctx, "SELECT title FROM posting").Scan(&title);
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "QueryRow failed: %v\n", err)
 	}
 
-	fmt.Println(email)
+	fmt.Println(title)
 
 
 	//dbpool, err := pgxpool.Connect(context.Background(), os.Getenv("DATABASE_URL"))
