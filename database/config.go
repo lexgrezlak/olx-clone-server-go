@@ -1,5 +1,4 @@
-package config
-
+package database
 
 import (
 	"encoding/json"
@@ -7,6 +6,20 @@ import (
 	"github.com/pkg/errors"
 	"os"
 )
+
+type Config struct {
+	Name string `json:"name"`
+	User string `json:"user"`
+	Password string `json:"password"`
+	Host string `json:"host"`
+	Port string `json:"Port"`
+	SSLMode string `json:"sslmode"`
+}
+
+func (c *Config) DatabaseConfig() *Config {
+	return c
+}
+
 
 // Loads files optionally from the json file stored
 // at path, then will override those values based on the envconfig
