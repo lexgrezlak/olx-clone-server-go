@@ -108,7 +108,6 @@ func DecodeJSONBody(w http.ResponseWriter, r *http.Request, dst interface{}) err
 			log.Println(err.Error())
 			return err
 		}
-		return err
 	}
 
 	// Call decode again, using a pointer to an empty anonymous struct

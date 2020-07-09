@@ -3,19 +3,20 @@ package main
 import (
 	"fmt"
 	"github.com/gorilla/mux"
+	"github.com/rs/cors"
 	"log"
 	"net/http"
 	"olx-clone-server/internal/handler"
-	"olx-clone-server/internal/middleware"
 	"olx-clone-server/internal/service"
 	"time"
-	"github.com/rs/cors"
 )
 
 func main() {
 	service.InitDB()
 	r := mux.NewRouter()
 	r.HandleFunc("/postings", handler.Postings).Methods("GET", "POST")
+	r.HandleFunc("/auth/sign-in", handler.SignIn).Methods("POST")
+	r.HandleFunc("/auth/sign-up", handler.SignUp).Methods("POST")
 	//r.Use(middleware.Logger)
 
 	r.Use(mux.CORSMethodMiddleware(r))
