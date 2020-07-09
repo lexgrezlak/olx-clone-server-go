@@ -11,16 +11,16 @@ import (
 	"strings"
 )
 
-type malformedRequest struct {
-	status int
-	msg string
+type MalformedRequest struct {
+	Status int
+	Msg    string
 }
 
-func (mr *malformedRequest) Error() string {
-	return mr.msg
+func (mr *MalformedRequest) Error() string {
+	return mr.Msg
 }
 
-func decodeJSONBody(w http.ResponseWriter, r *http.Request, dst interface{}) error {
+func DecodeJSONBody(w http.ResponseWriter, r *http.Request, dst interface{}) error {
 	// We are using the package gddo/httputil/header to parse
 	// and extract the value here, so the check works
 	// even if the client includes additional charset or boundary
@@ -30,7 +30,7 @@ func decodeJSONBody(w http.ResponseWriter, r *http.Request, dst interface{}) err
 		if v != "application/json" {
 			msg := "Content-Type header is not application/json"
 			http.Error(w, msg, http.StatusUnsupportedMediaType)
-			return &malformedRequest{status: http.StatusUnsupportedMediaType, msg: msg}
+			return &MalformedRequest{Status: http.StatusUnsupportedMediaType, Msg: msg}
 		}
 	}
 
@@ -65,9 +65,9 @@ func decodeJSONBody(w http.ResponseWriter, r *http.Request, dst interface{}) err
 		// easier for the client to fix
 		case errors.As(err, &syntaxError):
 			msg := fmt.Sprintf("Request body contains badly-formed JSON (at positon %d)", syntaxError.Offset)
-			return &malformedRequest{
-				status: http.StatusBadRequest,
-				msg:    msg,
+			return &MalformedRequest{
+				Status: http.StatusBadRequest,
+				Msg:    msg,
 			}
 		// Catch any type errors in the JSON and send an error message
 		// which interpolates the location of the problem to make it
@@ -75,9 +75,9 @@ func decodeJSONBody(w http.ResponseWriter, r *http.Request, dst interface{}) err
 		case errors.As(err, &unmarshalTypeError):
 			msg := fmt.Sprintf("Request body contains an invalid value for the %q field (at position %d)",
 				unmarshalTypeError.Field, unmarshalTypeError.Offset)
-			return &malformedRequest{
-				status: http.StatusBadRequest,
-				msg:    msg,
+			return &MalformedRequest{
+				Status: http.StatusBadRequest,
+				Msg:    msg,
 			}
 		// Catch the error caused by extra unexpected fields in the request
 		// body. We extract the field name from the error message and interpolate
@@ -85,23 +85,23 @@ func decodeJSONBody(w http.ResponseWriter, r *http.Request, dst interface{}) err
 		case strings.HasPrefix(err.Error(), "json: unknown field "):
 			fieldName := strings.TrimPrefix(err.Error(), "json: unknown field")
 			msg := fmt.Sprintf("Request body contains unknown field %s", fieldName)
-			return &malformedRequest{
-				status: http.StatusBadRequest,
-				msg:    msg,
+			return &MalformedRequest{
+				Status: http.StatusBadRequest,
+				Msg:    msg,
 			}
 		// An io.EOF error is returned by Decode() if the request body
 		// is empty.
 		case errors.Is(err, io.EOF):
 			msg := "Request body must not be empty"
-			return &malformedRequest{
-				status: http.StatusBadRequest,
-				msg:    msg,
+			return &MalformedRequest{
+				Status: http.StatusBadRequest,
+				Msg:    msg,
 			}
 		case err.Error() == "http: request body too large":
 			msg := "Request body must not be larger than 1MB"
-			return &malformedRequest{
-				status: http.StatusRequestEntityTooLarge,
-				msg:    msg,
+			return &MalformedRequest{
+				Status: http.StatusRequestEntityTooLarge,
+				Msg:    msg,
 			}
 		// Otherwise default to logging the error and returning it
 		default:
@@ -118,9 +118,9 @@ func decodeJSONBody(w http.ResponseWriter, r *http.Request, dst interface{}) err
 	err = dec.Decode(&struct{}{})
 	if err != io.EOF {
 		msg := "Request body must only contain a single JSON object"
-		return &malformedRequest{
-			status: http.StatusBadRequest,
-			msg:    msg,
+		return &MalformedRequest{
+			Status: http.StatusBadRequest,
+			Msg:    msg,
 		}
 	}
 

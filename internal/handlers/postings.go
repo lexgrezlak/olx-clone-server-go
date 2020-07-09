@@ -2,9 +2,12 @@ package handlers
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
+	"log"
 	"net/http"
-	"olx-clone-server/internal/models"
+	"olx-clone-server/internal/services"
+	"olx-clone-server/internal/utils"
 )
 
 type Posting struct {
@@ -18,29 +21,33 @@ func Postings(w http.ResponseWriter, r *http.Request) {
 	// POST method creates a new posting
 	switch r.Method {
 	case http.MethodGet:
-		ps, err := models.AllPostings()
+		ps, err := services.AllPostings()
 		if err != nil {
 			fmt.Errorf("%v", err)
-			w.WriteHeader(http.StatusInternalServerError)
-			return
+			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
 		w.WriteHeader(http.StatusOK)
 		if payload, err := json.Marshal(ps); err == nil {
 			w.Write(payload)
 		}
 		break
-		// Creates a posting
 	case http.MethodPost:
-		// Store the request body in i
-		i := new(models.PostingInput)
-		err := json.NewDecoder(r.Body).Decode(i)
+		var i services.PostingInput
+		err := utils.DecodeJSONBody(w, r, &i)
 		if err != nil {
-			fmt.Errorf("%v", err)
-			w.WriteHeader(http.StatusInternalServerError)
+			var mr *utils.MalformedRequest
+			if errors.As(err, &mr) {
+				http.Error(w, mr.Msg, mr.Status)
+			} else {
+				// Default to 500 Internal Server Error
+				log.Print(err.Error())
+				http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+			}
 			return
 		}
-		// Create the posting in the db
-		err = models.CreatePosting(*i)
+
+		//Create the posting in the db with the given input
+		err = services.CreatePosting(i)
 		if err != nil {
 			fmt.Errorf("%v", err)
 			w.WriteHeader(http.StatusBadRequest)

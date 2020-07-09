@@ -5,7 +5,7 @@ import (
 	"fmt"
 )
 
-type Posting struct {
+type PostingPreview struct {
 	Id string
 	Title string
 	Price int
@@ -24,7 +24,7 @@ type PostingInput struct {
 	UserId string
 }
 
-func AllPostings() ([]*Posting, error) {
+func AllPostings() ([]*PostingPreview, error) {
 	rows, err := db.Pool.Query(context.Background(),
 		"SELECT id, title, price, photos FROM posting")
 	if err != nil {
@@ -33,9 +33,9 @@ func AllPostings() ([]*Posting, error) {
 
 	defer rows.Close()
 
-	ps := make([]*Posting, 0)
+	ps := make([]*PostingPreview, 0)
 	for rows.Next() {
-		p := new(Posting)
+		p := new(PostingPreview)
 		err := rows.Scan(&p.Id, &p.Title, &p.Price, &p.Photos)
 		if err != nil {
 			return nil, err
