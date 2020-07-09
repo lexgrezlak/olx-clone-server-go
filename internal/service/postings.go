@@ -12,7 +12,7 @@ type PostingPreview struct {
 	Photos []string `json:"photos"`
 }
 
-type PostingInput struct {
+type CreatePostingInput struct {
 	Id string
 	Title string
 	Price int
@@ -24,7 +24,7 @@ type PostingInput struct {
 	UserId string
 }
 
-func AllPostings() ([]*PostingPreview, error) {
+func (db *DB) GetAllPostings(ctx context.Context) ([]*PostingPreview, error) {
 	rows, err := db.Pool.Query(context.Background(),
 		"SELECT id, title, price, photos FROM posting")
 	if err != nil {
@@ -50,7 +50,7 @@ func AllPostings() ([]*PostingPreview, error) {
 	return ps, nil
 }
 
-func CreatePosting(postingInput PostingInput) error {
+func (db *DB) CreatePosting(ctx context.Context, postingInput CreatePostingInput) error {
 	_, err := db.Pool.Exec(context.Background(),
 		"INSERT INTO public.posting (title, price, condition, description, phone, city, photos, \"userId\") VALUES ($1, $2, $3, $4, $5, $6, $7, $8)",
 		postingInput.Title, postingInput.Price, postingInput.Condition, postingInput.Description,

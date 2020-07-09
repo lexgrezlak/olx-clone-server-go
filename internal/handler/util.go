@@ -6,6 +6,15 @@ import (
 	"time"
 )
 
+// Create the JWT key used to create the signature
+var jwtKey = []byte("secret_key")
+
+
+type Claims struct {
+	Email string `json:"email"`
+	jwt.StandardClaims
+}
+
 func handleTokenResponse(w http.ResponseWriter, email string) {
 	expirationTime := time.Now().Add(5 * time.Minute)
 	// Create the JWT claims, which include the email and expiry time.

@@ -5,8 +5,16 @@ import (
 	"errors"
 	"golang.org/x/crypto/bcrypt"
 	"net/http"
-	"olx-clone-server/internal/common"
 )
+
+
+type SignUpInput struct {
+	FirstName string `json:"firstName"`
+	LastName string `json:"lastName"`
+	Email string `json:"email"`
+	Password string `json:"password"`
+}
+
 
 type User struct {
 	Id string `json:"id"`
@@ -16,19 +24,7 @@ type User struct {
 	PasswordHash string `json:"passwordHash"`
 }
 
-func getUserByEmail(email string) (*User, error) {
-	row := db.Pool.QueryRow(context.Background(),
-		"SELECT * FROM user WHERE email=$1 LIMIT 1", email)
-
-	var u *User
-	if err := row.Scan(&u); err != nil {
-		return nil, err
-	}
-
-	return u, nil
-}
-
-func CreateUser(i common.SignUpInput) error {
+func (db *DB) CreateUser(ctx context.Context, i SignUpInput) error {
 	ph, err := hashPassword(i.Password)
 	if err != nil {
 		return err
@@ -44,8 +40,8 @@ func CreateUser(i common.SignUpInput) error {
 	return nil
 }
 
-func ValidateUser(email, password string) (*User, error) {
-	user, err := getUserByEmail(email)
+func (db *DB) ValidateUser(ctx context.Context, email, password string) (*User, error) {
+	user, err := db.GetUserByEmail(email)
 	if err != nil {
 		return nil, err
 	}

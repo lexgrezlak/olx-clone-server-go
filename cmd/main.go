@@ -6,19 +6,29 @@ import (
 	"github.com/rs/cors"
 	"log"
 	"net/http"
+	"olx-clone-server/internal/config"
 	"olx-clone-server/internal/handler"
+	"olx-clone-server/internal/middleware"
 	"olx-clone-server/internal/service"
 	"time"
 )
 
 func main() {
-	service.InitDB()
-	r := mux.NewRouter()
-	r.HandleFunc("/postings", handler.Postings).Methods("GET", "POST")
-	r.HandleFunc("/auth/sign-in", handler.SignIn).Methods("POST")
-	r.HandleFunc("/auth/sign-up", handler.SignUp).Methods("POST")
-	//r.Use(middleware.Logger)
+	c := config.Config{}
+	if err := config.LoadConfig("env.json", "config", &c); err != nil {
+		panic(err)
+	}
+	db, err := service.NewDB(&c)
+	if err != nil {
+		panic (err)
+	}
 
+	r := mux.NewRouter()
+	r.HandleFunc("/postings", handler.AllPostings(db)).Methods("GET", "POST")
+	r.HandleFunc("/auth/sign-in", handler.SignIn(db)).Methods("POST")
+	r.HandleFunc("/auth/sign-up", handler.SignUp(db)).Methods("POST")
+
+	r.Use(middleware.LoggerMiddleware)
 	r.Use(mux.CORSMethodMiddleware(r))
 
 
