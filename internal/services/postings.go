@@ -6,10 +6,10 @@ import (
 )
 
 type PostingPreview struct {
-	Id string
-	Title string
-	Price int
-	Photos []string
+	Id string `json:"id"`
+	Title string `json:"title"`
+	Price int `json:"price"`
+	Photos []string `json:"photos"`
 }
 
 type PostingInput struct {

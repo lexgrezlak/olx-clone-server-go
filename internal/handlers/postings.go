@@ -17,6 +17,7 @@ type Posting struct {
 // PostingHandler responds with Postings in plaintext
 func Postings(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	// GET method returns all postings in the db
 	// POST method creates a new posting
 	switch r.Method {

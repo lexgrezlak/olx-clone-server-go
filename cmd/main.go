@@ -14,6 +14,8 @@ func main() {
 	services.InitDB()
 	r := mux.NewRouter()
 	r.HandleFunc("/postings", handlers.Postings)
+	//r.Use(middleware.Logger)
+	r.Use(mux.CORSMethodMiddleware(r))
 	srv := &http.Server{
 		Handler: r,
 		Addr: "127.0.0.1:4000",
