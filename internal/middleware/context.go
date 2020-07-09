@@ -13,17 +13,17 @@ type ContextID int
 const ID ContextID = 0
 
 // Updates context with the id then increments it
-func SetID(start int64) Middleware {
-	return func(next http.HandlerFunc) http.HandlerFunc {
-		return func(w http.ResponseWriter, r *http.Request) {
+func SetID(next http.Handler) http.Handler {
+	start := int64(1)
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			ctx := context.WithValue(r.Context(), ID,
 				strconv.FormatInt(start, 10))
 			start++
 			r = r.WithContext(ctx)
-			next(w, r)
-		}
-	}
+			next.ServeHTTP(w, r)
+	})
 }
+
 
 // Grabs an ID from a context if set
 // otherwise it returns an empty string
