@@ -11,7 +11,7 @@ var db *database.DB
 func InitDB() {
 	var err error
 	c := database.Config{}
-	if err = database.LoadConfig("../env.json", "database", &c); err != nil {
+	if err = database.LoadConfig("env.json", "database", &c); err != nil {
 		panic(err)
 	}
 
