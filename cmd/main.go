@@ -24,7 +24,8 @@ func main() {
 	}
 
 	r := mux.NewRouter()
-	r.HandleFunc("/postings", handler.AllPostings(db)).Methods("GET", "POST")
+	r.HandleFunc("/postings", handler.AllPostings(db)).Methods("GET")
+	r.HandleFunc("/postings", handler.CreatePosting(db)).Methods("POST")
 	r.HandleFunc("/auth/sign-in", handler.SignIn(db)).Methods("POST")
 	r.HandleFunc("/auth/sign-up", handler.SignUp(db)).Methods("POST")
 
