@@ -3,6 +3,7 @@ module olx-clone-server
 go 1.14
 
 require (
+	github.com/golang/gddo v0.0.0-20200611223618-a4829ef13274
 	github.com/gorilla/mux v1.7.4 // indirect
 	github.com/jackc/pgx/v4 v4.7.1
 	github.com/k4s/phantomgo v0.0.0-20161104020322-11963773aa04 // indirect

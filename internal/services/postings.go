@@ -1,4 +1,4 @@
-package models
+package services
 
 import (
 	"context"
@@ -33,6 +33,8 @@ func AllPostings() ([]*PostingPreview, error) {
 
 	defer rows.Close()
 
+	// Make an empty slice of PostingPreviews
+	// and then fill it up with proper PostingPreviews
 	ps := make([]*PostingPreview, 0)
 	for rows.Next() {
 		p := new(PostingPreview)
