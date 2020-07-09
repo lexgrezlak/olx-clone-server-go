@@ -20,7 +20,6 @@ func (c *Config) DatabaseConfig() *Config {
 	return c
 }
 
-
 // Loads files optionally from the json file stored
 // at path, then will override those values based on the envconfig
 // struct tags. The envPrefix is how we prefix our environment

@@ -11,8 +11,8 @@ type DB struct {
 	Pool *pgxpool.Pool
 }
 
-// Sets up the database connections using the configuration in the
-// process's environment variables
+
+// Sets up the database connections using the provided configuration
 func NewFromEnv(ctx context.Context, config *Config) (*DB, error) {
 	connStr := dbConnectionString(config)
 

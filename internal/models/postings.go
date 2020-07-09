@@ -4,27 +4,28 @@ import "context"
 
 type Posting struct {
 	Title string
+	Price int
 }
 
 func AllPostings() ([]*Posting, error) {
-	rows, err := db.Pool.Query(context.Background(), "SELECT title FROM posting")
+	rows, err := db.Pool.Query(context.Background(), "SELECT title, price FROM posting")
 	if err != nil {
 		return nil, err
 	}
 
 	defer rows.Close()
 
-	postings := make([]*Posting, 0)
+	ps := make([]*Posting, 0)
 	for rows.Next() {
-		posting := new(Posting)
-		err := rows.Scan(&posting.Title)
+		p := new(Posting)
+		err := rows.Scan(&p.Title, &p.Price)
 		if err != nil {
 			return nil, err
 		}
-		postings = append(postings, posting)
+		ps = append(ps, p)
 	}
 	if err = rows.Err(); err != nil {
 		return nil, err
 	}
-	return postings, nil
+	return ps, nil
 }

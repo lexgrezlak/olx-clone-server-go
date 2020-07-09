@@ -7,16 +7,17 @@ import (
 
 var db *database.DB
 
+// Inits the database with config from the root folder
 func InitDB() {
 	var err error
-	ctx := context.Background()
 	c := database.Config{}
 	if err = database.LoadConfig("../env.json", "database", &c); err != nil {
 		panic(err)
 	}
 
-	db, err = database.NewFromEnv(ctx, &c)
+	db, err = database.NewFromEnv(context.Background(), &c)
 	if err != nil {
 		panic(err)
 	}
 }
+

@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"olx-clone-server/internal/models"
 )
@@ -20,12 +21,10 @@ func GetAllPostings(w http.ResponseWriter, r *http.Request) {
 
 	ps, err := models.AllPostings()
 	if err != nil {
+		fmt.Errorf("%v", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-	//for _, p := range ps {
-	//	fmt.Fprintf(w, "%s", p.Title)
-	//}
 
 	w.WriteHeader(http.StatusOK)
 
