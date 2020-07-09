@@ -1,4 +1,4 @@
-package services
+package service
 
 import (
 	"context"
@@ -51,7 +51,6 @@ func AllPostings() ([]*PostingPreview, error) {
 }
 
 func CreatePosting(postingInput PostingInput) error {
-	//err := db.Pool.Exec(context.Background(), "")
 	_, err := db.Pool.Exec(context.Background(),
 		"INSERT INTO public.posting (title, price, condition, description, phone, city, photos, \"userId\") VALUES ($1, $2, $3, $4, $5, $6, $7, $8)",
 		postingInput.Title, postingInput.Price, postingInput.Condition, postingInput.Description,

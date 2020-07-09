@@ -1,4 +1,4 @@
-package handlers
+package handler
 
 import (
 	"encoding/json"
@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"olx-clone-server/internal/services"
-	"olx-clone-server/internal/utils"
+	"olx-clone-server/internal/service"
+	"olx-clone-server/internal/util"
 )
 
 type Posting struct {
@@ -16,13 +16,10 @@ type Posting struct {
 
 // PostingHandler responds with Postings in plaintext
 func Postings(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
 	// GET method returns all postings in the db
 	// POST method creates a new posting
-	switch r.Method {
-	case http.MethodGet:
-		ps, err := services.AllPostings()
+	if r.Method == http.MethodGet {
+		ps, err := service.AllPostings()
 		if err != nil {
 			fmt.Errorf("%v", err)
 			http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -31,12 +28,13 @@ func Postings(w http.ResponseWriter, r *http.Request) {
 		if payload, err := json.Marshal(ps); err == nil {
 			w.Write(payload)
 		}
-		break
-	case http.MethodPost:
-		var i services.PostingInput
-		err := utils.DecodeJSONBody(w, r, &i)
+	// Else http.MethodPost, it's specified in the router that
+	// only GET and POST are allowed
+	} else {
+		var i service.PostingInput
+		err := util.DecodeJSONBody(w, r, &i)
 		if err != nil {
-			var mr *utils.MalformedRequest
+			var mr *util.MalformedRequest
 			if errors.As(err, &mr) {
 				http.Error(w, mr.Msg, mr.Status)
 			} else {
@@ -48,16 +46,12 @@ func Postings(w http.ResponseWriter, r *http.Request) {
 		}
 
 		//Create the posting in the db with the given input
-		err = services.CreatePosting(i)
+		err = service.CreatePosting(i)
 		if err != nil {
 			fmt.Errorf("%v", err)
 			w.WriteHeader(http.StatusBadRequest)
 			return
 		}
 		w.WriteHeader(http.StatusCreated)
-		break
-	default:
-		w.WriteHeader(http.StatusMethodNotAllowed)
-		break
 	}
 }
