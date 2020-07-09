@@ -12,7 +12,7 @@ type Config struct {
 	User string `json:"user"`
 	Password string `json:"password"`
 	Host string `json:"host"`
-	Port string `json:"Port"`
+	Port string `json:"port"`
 	SSLMode string `json:"sslmode"`
 }
 

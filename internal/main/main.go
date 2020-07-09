@@ -1,48 +1,26 @@
 package main
 
 import (
-	"context"
 	"fmt"
+	"net/http"
 	"olx-clone-server/internal/database"
-	"os"
+	"olx-clone-server/internal/handlers"
+	"olx-clone-server/internal/models"
 )
 
+var db *database.DB
 
 func main() {
-	var err error
+	models.InitDB()
+	http.HandleFunc("/", handlers.GetAllPostings)
+	fmt.Println("Listening on port :3333")
+	err := http.ListenAndServe(":3333", nil)
+	panic(err)
 
-	c := database.Config{}
-	ctx := context.Background()
-	if err = database.LoadConfig("env.json", "database", &c); err != nil {
-		panic(err)
-	}
-
-	db, err := database.NewFromEnv(ctx, &c)
-	if err != nil {
-		panic(err)
-	}
-	defer db.Close(ctx)
-
-	var title string
-	err = db.Pool.QueryRow(ctx, "SELECT title FROM posting").Scan(&title);
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "QueryRow failed: %v\n", err)
-	}
-
-	fmt.Println(title)
-
-
-	//dbpool, err := pgxpool.Connect(context.Background(), os.Getenv("DATABASE_URL"))
-	//if err != nil {
-	//	fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
-	//}
-	//defer dbpool.Close()
-	//var greeting string
-	//err = dbpool.QueryRow(context.Background(), "SELECT 'hello world'").Scan(&greeting)
+	//var title string
+	//err := db.Pool.QueryRow(ctx, "SELECT title FROM posting").Scan(&title);
 	//if err != nil {
 	//	fmt.Fprintf(os.Stderr, "QueryRow failed: %v\n", err)
-	//	os.Exit(1)
 	//}
-	//
-	//fmt.Println(greeting)
+
 }

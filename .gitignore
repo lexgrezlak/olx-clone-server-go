@@ -3,3 +3,5 @@
 env.json
 data
 docker.env
+server.crt
+server.key
