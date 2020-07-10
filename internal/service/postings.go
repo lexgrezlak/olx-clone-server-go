@@ -13,7 +13,6 @@ type PostingPreview struct {
 }
 
 type CreatePostingInput struct {
-	Id string
 	Title string
 	Price int
 	Condition string
