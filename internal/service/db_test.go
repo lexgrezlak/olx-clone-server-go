@@ -40,3 +40,30 @@ func TestDBValues(t *testing.T) {
 		})
 	}
 }
+
+func TestDBConnectionString(t *testing.T) {
+	testCases := []struct {
+		name string
+		config config.Config
+		want string
+	}{
+		{
+			name: "some config",
+			config: config.Config{
+				User:     "supertest",
+				Password: "letmein",
+				Host:     "143.34.23.12",
+			},
+			want: "user=supertest password=letmein host=143.34.23.12",
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			got := dbConnectionString(&tc.config)
+			if diff := cmp.Diff(tc.want, got); diff != "" {
+				t.Errorf("mismatch (-want, +got): \n%s", diff)
+			}
+		})
+	}
+}
