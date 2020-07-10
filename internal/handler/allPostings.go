@@ -12,8 +12,6 @@ type Posting struct {
 
 func AllPostings(datastore PostingDatastore) http.HandlerFunc{
 	return func(w http.ResponseWriter, r *http.Request) {
-		// GET method returns all postings in the db
-		// POST method creates a new posting
 			ps, err := datastore.GetAllPostings(r.Context())
 			if err != nil {
 				fmt.Errorf("%v", err)
@@ -23,7 +21,5 @@ func AllPostings(datastore PostingDatastore) http.HandlerFunc{
 			if payload, err := json.Marshal(ps); err == nil {
 				w.Write(payload)
 			}
-			// Else http.MethodPost, it's specified in the router that
-			// only GET and POST are allowed
 	}
 }

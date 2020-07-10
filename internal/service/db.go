@@ -6,6 +6,10 @@ import (
 	"github.com/jackc/pgx/v4/pgxpool"
 	"olx-clone-server/internal/config"
 	"strings"
+	// imported to register the postgres migration driver
+	_ "github.com/golang-migrate/migrate/v4/database/postgres"
+	// imported to register the "file" source migration driver
+	_ "github.com/golang-migrate/migrate/v4/source/file"
 )
 
 type DB struct {

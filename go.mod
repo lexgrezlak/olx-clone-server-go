@@ -12,8 +12,9 @@ require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/docker/go-connections v0.4.0 // indirect
 	github.com/docker/go-units v0.4.0 // indirect
+	github.com/golang-migrate/migrate/v4 v4.11.0
 	github.com/golang/gddo v0.0.0-20200611223618-a4829ef13274
-	github.com/google/go-cmp v0.1.1-0.20171103154506-982329095285
+	github.com/google/go-cmp v0.4.0
 	github.com/gorilla/mux v1.7.4 // indirect
 	github.com/jackc/pgx/v4 v4.7.1
 	github.com/k4s/phantomgo v0.0.0-20161104020322-11963773aa04 // indirect
@@ -21,8 +22,9 @@ require (
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/opencontainers/image-spec v1.0.1 // indirect
 	github.com/opencontainers/runc v0.1.1 // indirect
-	github.com/ory/dockertest v3.3.5+incompatible // indirect
-	github.com/pkg/errors v0.8.1
+	github.com/ory/dockertest v3.3.5+incompatible
+	github.com/pkg/errors v0.9.1
 	github.com/rs/cors v1.7.0 // indirect
+	github.com/sethvargo/go-retry v0.1.0
 	golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9
 )

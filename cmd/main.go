@@ -10,12 +10,13 @@ import (
 	"olx-clone-server/internal/handler"
 	"olx-clone-server/internal/middleware"
 	"olx-clone-server/internal/service"
+	"os"
 	"time"
 )
 
 func main() {
 	c := config.Config{}
-	if err := config.LoadConfig("env.json", "config", &c); err != nil {
+	if err := config.LoadConfig(os.Getenv("configPath"), "config", &c); err != nil {
 		panic(err)
 	}
 	db, err := service.NewDB(&c)

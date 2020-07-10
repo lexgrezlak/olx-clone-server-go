@@ -1,6 +1,7 @@
 .idea
 .env
-env.json
+cmd/development.json
+cmd/test.json
 data
 docker.env
 server.crt

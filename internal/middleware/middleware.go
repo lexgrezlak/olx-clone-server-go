@@ -7,7 +7,6 @@ import (
 )
 
 
-// Logs requests, this will use an id passed via SetID()
 func LoggerMiddleware(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			start := time.Now()
