@@ -10,7 +10,7 @@ import (
 )
 
 func CreatePosting(datastore PostingDatastore) http.HandlerFunc {
-	return func (w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
 		var i service.CreatePostingInput
 		err := util.DecodeJSONBody(w, r, &i)
 		if err != nil {

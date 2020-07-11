@@ -10,11 +10,11 @@ import (
 // Create a struct to read the email and the password
 // from the request body
 type signInInput struct {
-	Email string `json:"email"`
+	Email    string `json:"email"`
 	Password string `json:"password"`
 }
 
-func SignIn(datastore UserDatastore) http.HandlerFunc  {
+func SignIn(datastore UserDatastore) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var i signInInput
 		err := util.DecodeJSONBody(w, r, &i)
@@ -42,5 +42,3 @@ func SignIn(datastore UserDatastore) http.HandlerFunc  {
 		handleTokenResponse(w, u.Email)
 	}
 }
-
-

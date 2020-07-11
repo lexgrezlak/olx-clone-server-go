@@ -22,7 +22,6 @@ func NewTestDatabaseWithConfig(tb testing.TB) (*DB, *config.Config){
 
 	ctx := context.Background()
 
-
 	// Create the pool (docker instance)
 	pool, err := dockertest.NewPool("")
 	if err != nil {

@@ -9,7 +9,6 @@ import (
 // Create the JWT key used to create the signature
 var jwtKey = []byte("secret_key")
 
-
 type Claims struct {
 	Email string `json:"email"`
 	jwt.StandardClaims
@@ -19,7 +18,7 @@ func handleTokenResponse(w http.ResponseWriter, email string) {
 	expirationTime := time.Now().Add(5 * time.Minute)
 	// Create the JWT claims, which include the email and expiry time.
 	claims := &Claims{
-		Email:          email,
+		Email: email,
 		StandardClaims: jwt.StandardClaims{
 			// In JWT, the expiry time is expressed in unix milliseconds.
 			ExpiresAt: expirationTime.Unix(),
@@ -35,11 +34,11 @@ func handleTokenResponse(w http.ResponseWriter, email string) {
 	}
 
 	http.SetCookie(w, &http.Cookie{
-		Name:       "token",
-		Value:      tokenString,
-		Expires:    expirationTime,
-		Secure:     false,
-		HttpOnly:   true,
-		SameSite:   0,
+		Name:     "token",
+		Value:    tokenString,
+		Expires:  expirationTime,
+		Secure:   false,
+		HttpOnly: true,
+		SameSite: 0,
 	})
 }

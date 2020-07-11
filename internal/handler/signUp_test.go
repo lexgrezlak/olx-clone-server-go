@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"github.com/google/go-cmp/cmp"
 	"net/http/httptest"
 	"olx-clone-server/internal/service"
@@ -13,9 +12,9 @@ func TestSignUp(t *testing.T) {
 	testDb := service.NewTestDatabase(t)
 
 	testCases := []struct {
-		name string
+		name  string
 		input service.SignUpInput
-		want int
+		want  int
 	}{
 		{
 			name: "valid input",
@@ -26,18 +25,16 @@ func TestSignUp(t *testing.T) {
 				Password:  "askdaskdask",
 			},
 			want: 201,
-		},		{
+		}, {
 			name: "not enough input",
 			input: service.SignUpInput{
-				LastName:  "adskasd",
-				Email:     "asdsaad@das.sad",
-				Password:  "askdaskdask",
+				LastName: "adskasd",
+				Email:    "asdsaad@das.sad",
+				Password: "askdaskdask",
 			},
 			want: 400,
 		},
 	}
-
-
 
 	for _, tc := range testCases {
 		body := util.EncodeJSONBody(&tc.input)
