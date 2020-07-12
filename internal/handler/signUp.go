@@ -2,6 +2,7 @@ package handler
 
 import (
 	"errors"
+	"fmt"
 	"log"
 	"net/http"
 	"olx-clone-server/internal/service"
@@ -26,6 +27,8 @@ func SignUp(datastore service.UserDatastore) http.HandlerFunc {
 		}
 
 		err = datastore.CreateUser(i)
+		fmt.Print(err)
+
 		if err != nil {
 			msg := "User with this email already exists"
 			http.Error(w, msg, http.StatusBadRequest)

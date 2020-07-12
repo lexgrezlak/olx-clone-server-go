@@ -1,54 +1,42 @@
 package handler
 
 import (
+	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/google/go-cmp/cmp"
+	"net/http"
 	"net/http/httptest"
-	"olx-clone-server/internal/database"
 	"olx-clone-server/internal/service"
 	"olx-clone-server/internal/util"
 	"testing"
 )
 
 func TestSignUp(t *testing.T) {
-	testDb := database.NewTestDatabase(t)
-
-	testCases := []struct {
-		name  string
-		input service.SignUpInput
-		want  int
-	}{
-		{
-			name: "valid input",
-			input: service.SignUpInput{
-				FirstName: "johnrwewerw",
-				LastName:  "adskasd",
-				Email:     "asdsaad@das.sad",
-				Password:  "askdaskdask",
-			},
-			want: 201,
-		}, {
-			name: "not enough input",
-			input: service.SignUpInput{
-				LastName: "adskasd",
-				Email:    "asdsaad@das.sad",
-				Password: "askdaskdask",
-			},
-			want: 400,
-		},
+	api, mock, err := service.NewTestAPI()
+	if err != nil {
+		t.Fatal(err)
 	}
 
-	for _, tc := range testCases {
-		body := util.EncodeJSONBody(&tc.input)
+	t.Run("valid input", func(t *testing.T) {
+		input := service.SignUpInput{
+			FirstName: "Johny",
+			LastName:  "Smithy",
+			Email:     "john123@icloud.com",
+			Password:  "Kjqj3i432n",
+		}
+		var lastInsertID, affected int64
+		mock.ExpectExec("INSERT .*").WillReturnResult(sqlmock.NewResult(lastInsertID, affected))
+
+		body := util.EncodeJSONBody(&input)
 		req := httptest.NewRequest("Post", "/auth/sign-up", body)
 		res := httptest.NewRecorder()
-		h := SignUp(testDb)
+		h := SignUp(api)
 		h(res, req)
 
-		t.Run(tc.name, func(t *testing.T) {
-			got := res.Code
-			if diff := cmp.Diff(tc.want, got); diff != "" {
-				t.Errorf("mismatch (-want, +got): \n%s", diff)
-			}
-		})
-	}
+		want := http.StatusCreated
+		got := res.Code
+		if diff := cmp.Diff(want, got); diff != "" {
+			t.Errorf("mismatch (-want, +got): \n%s", diff)
+		}
+	})
+
 }
