@@ -6,20 +6,18 @@ import (
 	"net/http"
 )
 
-
 type SignUpInput struct {
 	FirstName string `json:"firstName"`
-	LastName string `json:"lastName"`
-	Email string `json:"email"`
-	Password string `json:"password"`
+	LastName  string `json:"lastName"`
+	Email     string `json:"email"`
+	Password  string `json:"password"`
 }
 
-
 type User struct {
-	Id string `json:"id"`
-	FirstName string `json:"firstName"`
-	LastName string `json:"lastName"`
-	Email string `json:"email"`
+	Id           string `json:"id"`
+	FirstName    string `json:"firstName"`
+	LastName     string `json:"lastName"`
+	Email        string `json:"email"`
 	PasswordHash string `json:"passwordHash"`
 }
 
@@ -51,7 +49,6 @@ func (api *API) ValidateUser(email, password string) (*User, error) {
 
 	return user, nil
 }
-
 
 func hashPassword(password string) (string, error) {
 	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 12)

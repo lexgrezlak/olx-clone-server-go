@@ -2,24 +2,25 @@ package service
 
 import (
 	"fmt"
+	"github.com/lib/pq"
 )
 
 type PostingPreview struct {
-	Id string `json:"id"`
-	Title string `json:"title"`
-	Price int `json:"price"`
+	Id     string   `json:"id"`
+	Title  string   `json:"title"`
+	Price  int      `json:"price"`
 	Photos []string `json:"photos"`
 }
 
 type CreatePostingInput struct {
-	Title string
-	Price int
-	Condition string
+	Title       string
+	Price       int
+	Condition   string
 	Description string
-	Phone int
-	City string
-	Photos []string
-	UserId string
+	Phone       int
+	City        string
+	Photos      []string
+	UserId      string
 }
 
 func (api *API) GetAllPostings() ([]*PostingPreview, error) {
@@ -36,7 +37,7 @@ func (api *API) GetAllPostings() ([]*PostingPreview, error) {
 	ps := make([]*PostingPreview, 0)
 	for rows.Next() {
 		p := new(PostingPreview)
-		err := rows.Scan(&p.Id, &p.Title, &p.Price, &p.Photos)
+		err := rows.Scan(&p.Id, &p.Title, &p.Price, pq.Array(&p.Photos))
 		if err != nil {
 			return nil, err
 		}
