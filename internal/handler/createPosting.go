@@ -16,6 +16,7 @@ func CreatePosting(datastore service.PostingDatastore) http.HandlerFunc {
 		if err != nil {
 			var mr *util.MalformedRequest
 			if errors.As(err, &mr) {
+				fmt.Printf("hleloosdoaos %s", err)
 				http.Error(w, mr.Msg, mr.Status)
 			} else {
 				// Default to 500 Internal Server Error

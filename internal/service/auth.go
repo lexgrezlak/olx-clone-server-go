@@ -2,6 +2,7 @@ package service
 
 import (
 	"errors"
+	"fmt"
 	"golang.org/x/crypto/bcrypt"
 	"net/http"
 )
@@ -53,6 +54,7 @@ func (api *api) ValidateUser(email, password string) (*User, error) {
 func hashPassword(password string) (string, error) {
 	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 12)
 	if err != nil {
+		fmt.Errorf("an error occurred while hashing password: %s", err)
 		return "", err
 	}
 	return string(bytes), nil

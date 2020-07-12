@@ -11,7 +11,7 @@ import (
 )
 
 func TestSignUp(t *testing.T) {
-	api, mock, err := service.NewTestAPI()
+	api, _, mock, err := service.NewTestAPI()
 	if err != nil {
 		t.Fatal(err)
 	}
