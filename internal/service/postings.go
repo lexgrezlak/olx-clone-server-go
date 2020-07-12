@@ -23,8 +23,8 @@ type CreatePostingInput struct {
 	UserId      string
 }
 
-func (api *API) GetAllPostings() ([]*PostingPreview, error) {
-	rows, err := api.Db.Query(
+func (api *api) GetAllPostings() ([]*PostingPreview, error) {
+	rows, err := api.db.Query(
 		"SELECT id, title, price, photos FROM posting")
 	if err != nil {
 		return nil, err
@@ -49,8 +49,8 @@ func (api *API) GetAllPostings() ([]*PostingPreview, error) {
 	return ps, nil
 }
 
-func (api *API) CreatePosting(postingInput CreatePostingInput) error {
-	_, err := api.Db.Exec(
+func (api *api) CreatePosting(postingInput CreatePostingInput) error {
+	_, err := api.db.Exec(
 		"INSERT INTO public.posting (title, price, condition, description, phone, city, photos, \"userId\") VALUES ($1, $2, $3, $4, $5, $6, $7, $8)",
 		postingInput.Title, postingInput.Price, postingInput.Condition, postingInput.Description,
 		postingInput.Phone, postingInput.City, postingInput.Photos, postingInput.UserId)

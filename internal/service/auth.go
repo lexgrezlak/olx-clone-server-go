@@ -21,13 +21,13 @@ type User struct {
 	PasswordHash string `json:"passwordHash"`
 }
 
-func (api *API) CreateUser(i SignUpInput) error {
+func (api *api) CreateUser(i SignUpInput) error {
 	ph, err := hashPassword(i.Password)
 	if err != nil {
 		return err
 	}
 
-	_, err = api.Db.Exec(
+	_, err = api.db.Exec(
 		`INSERT INTO public.user ("firstName", "lastName", "email", "passwordHash") VALUES ($1, $2, $3, $4)`,
 		i.FirstName, i.LastName, i.Email, ph)
 
@@ -37,7 +37,7 @@ func (api *API) CreateUser(i SignUpInput) error {
 	return nil
 }
 
-func (api *API) ValidateUser(email, password string) (*User, error) {
+func (api *api) ValidateUser(email, password string) (*User, error) {
 	user, err := api.GetUserByEmail(email)
 	if err != nil {
 		return nil, err

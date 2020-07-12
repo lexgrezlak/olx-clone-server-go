@@ -23,7 +23,7 @@ func main() {
 	if err != nil {
 		panic (err)
 	}
-	api := &service.API{Db: db}
+	api := service.NewAPI(db)
 
 	r := mux.NewRouter()
 	r.HandleFunc("/postings", handler.AllPostings(api)).Methods("GET")
@@ -35,7 +35,7 @@ func main() {
 	r.Use(mux.CORSMethodMiddleware(r))
 
 
-	// For dev only - Set up CORS so our client can consume the API
+	// For dev only - Set up CORS so our client can consume the api
 	corsWrapper := cors.New(cors.Options{
 		AllowedMethods: []string{"GET", "POST", "PATCH", "PUT"},
 		AllowedHeaders: []string{"Content-Type", "Origin", "Accept", "*"},

@@ -2,8 +2,8 @@ package service
 
 import "github.com/jmoiron/sqlx"
 
-type API struct {
-	Db *sqlx.DB
+type api struct {
+	db *sqlx.DB
 }
 
 type UserDatastore interface {
@@ -14,4 +14,8 @@ type UserDatastore interface {
 type PostingDatastore interface {
 	CreatePosting(input CreatePostingInput) error
 	GetAllPostings() ([]*PostingPreview, error)
+}
+
+func NewAPI(db *sqlx.DB) *api {
+	return &api{db: db}
 }
