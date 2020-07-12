@@ -2,15 +2,14 @@ package database
 
 import (
 	"github.com/google/go-cmp/cmp"
-	"olx-clone-server/internal/config"
 	"testing"
 )
 
 func TestDBValues(t *testing.T) {
 	testCases := []struct {
-		name string
-		config config.Config
-		want map[string]string
+		name   string
+		config Config
+		want   map[string]string
 	}{
 		{
 			name: "empty config",
@@ -18,7 +17,7 @@ func TestDBValues(t *testing.T) {
 		},
 		{
 			name: "some config",
-			config: config.Config{
+			config: Config{
 				Name:     "testingDb",
 				Password: "password123",
 				Port:     "3242",

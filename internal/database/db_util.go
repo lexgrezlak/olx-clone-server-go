@@ -10,14 +10,13 @@ import (
 	"github.com/sethvargo/go-retry"
 	"net"
 	"net/url"
-	"olx-clone-server/internal/config"
 	"path/filepath"
 	"runtime"
 	"testing"
 	"time"
 )
 
-func NewTestDatabaseWithConfig(tb testing.TB) (*sqlx.DB, *config.Config){
+func NewTestDatabaseWithConfig(tb testing.TB) (*sqlx.DB, *Config){
 	tb.Helper()
 
 	ctx := context.Background()
@@ -105,7 +104,7 @@ func NewTestDatabaseWithConfig(tb testing.TB) (*sqlx.DB, *config.Config){
 		db.Close()
 	})
 
-	return db, &config.Config{
+	return db, &Config{
 		Name:     dbname,
 		User:     user,
 		Password: password,

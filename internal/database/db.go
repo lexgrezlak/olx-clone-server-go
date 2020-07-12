@@ -5,7 +5,6 @@ import (
 	"github.com/jmoiron/sqlx"
 	// imported to register the postgres driver
 	_ "github.com/lib/pq"
-	"olx-clone-server/internal/config"
 	"strings"
 	// imported to register the postgres migration driver
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
@@ -16,7 +15,7 @@ import (
 
 
 // Sets up the config connections using the provided configuration
-func NewDB(config *config.Config) (*sqlx.DB, error) {
+func NewDB(config *Config) (*sqlx.DB, error) {
 	connStr := dbConnectionString(config)
 
 	db, err := sqlx.Connect("postgres", connStr)
@@ -29,7 +28,7 @@ func NewDB(config *config.Config) (*sqlx.DB, error) {
 
 // dbConnectionString builds a connection string suitable for the pgx
 // Postgres driver, using the values of vars
-func dbConnectionString(config *config.Config) string {
+func dbConnectionString(config *Config) string {
 	vals := dbValues(config)
 	var p []string
 	for k, v := range vals {
@@ -38,7 +37,7 @@ func dbConnectionString(config *config.Config) string {
 	return strings.Join(p, " ")
 }
 
-func dbValues(config *config.Config) map[string]string {
+func dbValues(config *Config) map[string]string {
 	p := map[string]string{}
 	setIfNotEmpty(p, "dbname", config.Name)
 	setIfNotEmpty(p, "host", config.Host)

@@ -6,7 +6,6 @@ import (
 	"github.com/rs/cors"
 	"log"
 	"net/http"
-	"olx-clone-server/internal/config"
 	"olx-clone-server/internal/database"
 	"olx-clone-server/internal/handler"
 	"olx-clone-server/internal/middleware"
@@ -16,8 +15,8 @@ import (
 )
 
 func main() {
-	c := config.Config{}
-	if err := config.LoadConfig(os.Getenv("configPath"), "config", &c); err != nil {
+	c := database.Config{}
+	if err := database.LoadConfig(os.Getenv("configPath"), "config", &c); err != nil {
 		panic(err)
 	}
 	db, err := database.NewDB(&c)
