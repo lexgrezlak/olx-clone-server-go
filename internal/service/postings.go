@@ -20,7 +20,6 @@ type CreatePostingInput struct {
 	Phone       int
 	City        string
 	Photos      []string
-	UserId      string
 }
 
 func (api *api) GetAllPostings() ([]*PostingPreview, error) {
@@ -49,11 +48,11 @@ func (api *api) GetAllPostings() ([]*PostingPreview, error) {
 	return ps, nil
 }
 
-func (api *api) CreatePosting(postingInput CreatePostingInput) error {
+func (api *api) CreatePosting(postingInput CreatePostingInput, userId string) error {
 	_, err := api.db.Exec(
 		"INSERT INTO public.posting (title, price, condition, description, phone, city, photos, \"userId\") VALUES ($1, $2, $3, $4, $5, $6, $7, $8)",
 		postingInput.Title, postingInput.Price, postingInput.Condition, postingInput.Description,
-		postingInput.Phone, postingInput.City, postingInput.Photos, postingInput.UserId)
+		postingInput.Phone, postingInput.City, pq.Array(postingInput.Photos), userId)
 
 	if err != nil {
 		fmt.Errorf("%v", err)

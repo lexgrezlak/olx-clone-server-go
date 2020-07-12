@@ -11,8 +11,15 @@ import (
 
 func CreatePosting(datastore service.PostingDatastore) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		claims, err := verifyToken(w, r)
+		fmt.Printf("hellwerowerowo %v", err)
+		if err != nil {
+			http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+			return
+		}
+
 		var i service.CreatePostingInput
-		err := util.DecodeJSONBody(w, r, &i)
+		err = util.DecodeJSONBody(w, r, &i)
 		if err != nil {
 			var mr *util.MalformedRequest
 			if errors.As(err, &mr) {
@@ -25,9 +32,10 @@ func CreatePosting(datastore service.PostingDatastore) http.HandlerFunc {
 			}
 			return
 		}
-
+fmt.Printf("user id heeeee %v", claims.UserId)
 		//Create the posting in the db with the given input
-		err = datastore.CreatePosting(i)
+		err = datastore.CreatePosting(i, claims.UserId)
+		fmt.Printf("%v errororororooror", err)
 		if err != nil {
 			fmt.Errorf("%v", err)
 			w.WriteHeader(http.StatusBadRequest)

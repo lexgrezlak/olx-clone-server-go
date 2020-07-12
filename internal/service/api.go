@@ -8,11 +8,11 @@ type api struct {
 
 type UserDatastore interface {
 	ValidateUser(email, password string) (*User, error)
-	CreateUser(input SignUpInput) error
+	CreateUser(input SignUpInput) (*User, error)
 }
 
 type PostingDatastore interface {
-	CreatePosting(input CreatePostingInput) error
+	CreatePosting(input CreatePostingInput, userId string) error
 	GetAllPostings() ([]*PostingPreview, error)
 }
 

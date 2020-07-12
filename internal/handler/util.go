@@ -10,15 +10,15 @@ import (
 var jwtKey = []byte("secret_key")
 
 type Claims struct {
-	Email string `json:"email"`
+	UserId string `json:"userId"`
 	jwt.StandardClaims
 }
 
-func handleTokenResponse(w http.ResponseWriter, email string) {
-	expirationTime := time.Now().Add(5 * time.Minute)
+func handleTokenResponse(w http.ResponseWriter, userId string) {
+	expirationTime := time.Now().Add(time.Hour * 24 * 7)
 	// Create the JWT claims, which include the email and expiry time.
 	claims := &Claims{
-		Email: email,
+		UserId: userId,
 		StandardClaims: jwt.StandardClaims{
 			// In JWT, the expiry time is expressed in unix milliseconds.
 			ExpiresAt: expirationTime.Unix(),
@@ -41,4 +41,29 @@ func handleTokenResponse(w http.ResponseWriter, email string) {
 		HttpOnly: true,
 		SameSite: 0,
 	})
+}
+
+func verifyToken(w http.ResponseWriter, r *http.Request) (*Claims, error) {
+	c, err := r.Cookie("token")
+	if err != nil {
+		return nil, err
+	}
+	tknStr := c.Value
+	claims := &Claims{}
+	tkn, err := jwt.ParseWithClaims(tknStr, claims, func(token *jwt.Token) (interface{}, error) {
+		return jwtKey, nil
+	})
+
+	// Clear the cookie.
+	if !tkn.Valid {
+		http.SetCookie(w, nil)
+	}
+
+	// When token is invalid, ParseWithClaims returns an error.
+	if err != nil {
+		return nil, err
+	}
+
+
+	return claims, nil
 }

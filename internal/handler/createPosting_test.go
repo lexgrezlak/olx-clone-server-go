@@ -18,7 +18,7 @@ func TestCreatePosting(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	t.Run("invalid user id", func(t *testing.T) {
+	t.Run("invalid token", func(t *testing.T) {
 		input := service.CreatePostingInput{
 			Title:       "Titleeee",
 			Price:       939,
@@ -27,7 +27,6 @@ func TestCreatePosting(t *testing.T) {
 			Phone:       9485934833,
 			City:        "Zurich",
 			Photos:      []string{},
-			UserId:      "asdkakdska",
 		}
 
 		buf := new(bytes.Buffer)
@@ -40,6 +39,7 @@ func TestCreatePosting(t *testing.T) {
 		mock.ExpectExec("INSERT .*").WillReturnResult(sqlmock.NewResult(lastInsertID,affected))
 		req := httptest.NewRequest("POST", "/postings", buf)
 		res := httptest.NewRecorder()
+		req.Header.Set("token", "hello1world")
 		h := CreatePosting(api)
 		h(res, req)
 

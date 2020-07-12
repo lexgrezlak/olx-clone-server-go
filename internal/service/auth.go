@@ -22,20 +22,26 @@ type User struct {
 	PasswordHash string `json:"passwordHash"`
 }
 
-func (api *api) CreateUser(i SignUpInput) error {
+func (api *api) CreateUser(i SignUpInput) (*User, error) {
 	ph, err := hashPassword(i.Password)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	_, err = api.db.Exec(
 		`INSERT INTO public.user ("firstName", "lastName", "email", "passwordHash") VALUES ($1, $2, $3, $4)`,
 		i.FirstName, i.LastName, i.Email, ph)
-
 	if err != nil {
-		return err
+		return nil, err
 	}
-	return nil
+
+	var u *User
+	err = api.db.QueryRow(`SELECT * FROM "user" WHERE email=$1 LIMIT 1`, i.Email).Scan(&u)
+	if err != nil {
+		return nil, err
+	}
+
+	return u, nil
 }
 
 func (api *api) ValidateUser(email, password string) (*User, error) {
@@ -43,7 +49,7 @@ func (api *api) ValidateUser(email, password string) (*User, error) {
 	if err != nil {
 		return nil, err
 	}
-	isPasswordValid := checkPasswordHash(user.PasswordHash, password)
+	isPasswordValid := checkPasswordHash(password, user.PasswordHash)
 	if !isPasswordValid {
 		return nil, errors.New(http.StatusText(http.StatusUnauthorized))
 	}

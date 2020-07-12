@@ -26,7 +26,7 @@ func SignUp(datastore service.UserDatastore) http.HandlerFunc {
 			return
 		}
 
-		err = datastore.CreateUser(i)
+		u, err := datastore.CreateUser(i)
 		fmt.Print(err)
 
 		if err != nil {
@@ -35,7 +35,7 @@ func SignUp(datastore service.UserDatastore) http.HandlerFunc {
 			return
 		}
 
-		handleTokenResponse(w, i.Email)
+		handleTokenResponse(w, u.Id)
 		w.WriteHeader(http.StatusCreated)
 	}
 }

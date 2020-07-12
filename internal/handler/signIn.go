@@ -40,6 +40,6 @@ func SignIn(datastore service.UserDatastore) http.HandlerFunc {
 			return
 		}
 
-		handleTokenResponse(w, u.Email)
+		handleTokenResponse(w, u.Id)
 	}
 }
