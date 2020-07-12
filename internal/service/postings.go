@@ -1,7 +1,6 @@
 package service
 
 import (
-	"context"
 	"fmt"
 )
 
@@ -23,8 +22,8 @@ type CreatePostingInput struct {
 	UserId string
 }
 
-func (db *DB) GetAllPostings(ctx context.Context) ([]*PostingPreview, error) {
-	rows, err := db.Pool.Query(context.Background(),
+func (api *API) GetAllPostings() ([]*PostingPreview, error) {
+	rows, err := api.Db.Query(
 		"SELECT id, title, price, photos FROM posting")
 	if err != nil {
 		return nil, err
@@ -49,8 +48,8 @@ func (db *DB) GetAllPostings(ctx context.Context) ([]*PostingPreview, error) {
 	return ps, nil
 }
 
-func (db *DB) CreatePosting(ctx context.Context, postingInput CreatePostingInput) error {
-	_, err := db.Pool.Exec(context.Background(),
+func (api *API) CreatePosting(postingInput CreatePostingInput) error {
+	_, err := api.Db.Exec(
 		"INSERT INTO public.posting (title, price, condition, description, phone, city, photos, \"userId\") VALUES ($1, $2, $3, $4, $5, $6, $7, $8)",
 		postingInput.Title, postingInput.Price, postingInput.Condition, postingInput.Description,
 		postingInput.Phone, postingInput.City, postingInput.Photos, postingInput.UserId)

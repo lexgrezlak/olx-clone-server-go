@@ -17,9 +17,11 @@ require (
 	github.com/google/go-cmp v0.4.0
 	github.com/gorilla/mux v1.7.4 // indirect
 	github.com/jackc/pgx/v4 v4.7.1
+	github.com/jmoiron/sqlx v1.2.0
 	github.com/k4s/phantomgo v0.0.0-20161104020322-11963773aa04 // indirect
 	github.com/k4s/webrowser v0.0.0-20160107091637-934d526d0f27 // indirect
 	github.com/kelseyhightower/envconfig v1.4.0
+	github.com/lib/pq v1.3.0
 	github.com/opencontainers/image-spec v1.0.1 // indirect
 	github.com/opencontainers/runc v0.1.1 // indirect
 	github.com/ory/dockertest v3.3.5+incompatible

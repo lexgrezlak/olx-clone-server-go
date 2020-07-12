@@ -1,9 +1,10 @@
-package service
+package database
 
 import (
-	"context"
 	"fmt"
-	"github.com/jackc/pgx/v4/pgxpool"
+	"github.com/jmoiron/sqlx"
+	// imported to register the postgres driver
+	_ "github.com/lib/pq"
 	"olx-clone-server/internal/config"
 	"strings"
 	// imported to register the postgres migration driver
@@ -12,19 +13,17 @@ import (
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 )
 
-type DB struct {
-	Pool *pgxpool.Pool
-}
+
 
 // Sets up the config connections using the provided configuration
-func NewDB(config *config.Config) (*DB, error) {
+func NewDB(config *config.Config) (*sqlx.DB, error) {
 	connStr := dbConnectionString(config)
 
-	pool, err := pgxpool.Connect(context.Background(), connStr)
+	db, err := sqlx.Connect("postgres", connStr)
 	if err != nil {
 		return nil, fmt.Errorf("creating connection pool: %v", err)
 	}
-	return &DB{Pool: pool}, nil
+	return db, nil
 }
 
 

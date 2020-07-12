@@ -8,7 +8,7 @@ import (
 	"olx-clone-server/internal/util"
 )
 
-func SignUp(datastore UserDatastore) http.HandlerFunc {
+func SignUp(datastore service.UserDatastore) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var i service.SignUpInput
 
@@ -25,7 +25,7 @@ func SignUp(datastore UserDatastore) http.HandlerFunc {
 			return
 		}
 
-		err = datastore.CreateUser(r.Context(), i)
+		err = datastore.CreateUser(i)
 		if err != nil {
 			msg := "User with this email already exists"
 			http.Error(w, msg, http.StatusBadRequest)

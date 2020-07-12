@@ -1,9 +1,7 @@
 package service
 
-import "context"
-
-func (db *DB) GetUserByEmail(email string) (*User, error) {
-	row := db.Pool.QueryRow(context.Background(),
+func (api *API) GetUserByEmail(email string) (*User, error) {
+	row := api.Db.QueryRow(
 		"SELECT * FROM user WHERE email=$1 LIMIT 1", email)
 
 	var u *User

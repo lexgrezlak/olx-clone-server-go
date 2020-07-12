@@ -3,13 +3,14 @@ package handler
 import (
 	"github.com/google/go-cmp/cmp"
 	"net/http/httptest"
+	"olx-clone-server/internal/database"
 	"olx-clone-server/internal/service"
 	"olx-clone-server/internal/util"
 	"testing"
 )
 
 func TestSignUp(t *testing.T) {
-	testDb := service.NewTestDatabase(t)
+	testDb := database.NewTestDatabase(t)
 
 	testCases := []struct {
 		name  string

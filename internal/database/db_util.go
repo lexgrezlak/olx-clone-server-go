@@ -1,11 +1,11 @@
-package service
+package database
 
 import (
 	"context"
 	"errors"
 	"fmt"
 	"github.com/golang-migrate/migrate/v4"
-	"github.com/jackc/pgx/v4/pgxpool"
+	"github.com/jmoiron/sqlx"
 	"github.com/ory/dockertest"
 	"github.com/sethvargo/go-retry"
 	"net"
@@ -17,7 +17,7 @@ import (
 	"time"
 )
 
-func NewTestDatabaseWithConfig(tb testing.TB) (*DB, *config.Config){
+func NewTestDatabaseWithConfig(tb testing.TB) (*sqlx.DB, *config.Config){
 	tb.Helper()
 
 	ctx := context.Background()
@@ -81,11 +81,12 @@ func NewTestDatabaseWithConfig(tb testing.TB) (*DB, *config.Config){
 
 	// Establish a connection to the database. Use a Fibonacci backoff
 	// instead of exponential so wait times scale appropriately.
-	var dbpool *pgxpool.Pool
+	var db *sqlx.DB
 
 	if err := retry.Do(ctx, b, func(ctx context.Context) error {
 		var err error
-		dbpool, err = pgxpool.Connect(ctx, connURL.String())
+		// Create the db instance.
+		db, err = sqlx.Connect("postgres", connURL.String())
 		if err != nil {
 			return retry.RetryableError(err)
 		}
@@ -99,12 +100,9 @@ func NewTestDatabaseWithConfig(tb testing.TB) (*DB, *config.Config){
 		tb.Fatalf("failed to migrate database: %s", err)
 	}
 
-	// Create the db instance.
-	db := &DB{Pool: dbpool}
-
 	// Close db when done.
 	tb.Cleanup(func() {
-		db.Pool.Close()
+		db.Close()
 	})
 
 	return db, &config.Config{
@@ -117,7 +115,7 @@ func NewTestDatabaseWithConfig(tb testing.TB) (*DB, *config.Config){
 	}
 }
 
-func NewTestDatabase(tb testing.TB) *DB {
+func NewTestDatabase(tb testing.TB) *sqlx.DB {
 	tb.Helper()
 
 	db, _ := NewTestDatabaseWithConfig(tb)

@@ -4,15 +4,16 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"olx-clone-server/internal/service"
 )
 
 type Posting struct {
 	title string
 }
 
-func AllPostings(datastore PostingDatastore) http.HandlerFunc {
+func AllPostings(datastore service.PostingDatastore) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		ps, err := datastore.GetAllPostings(r.Context())
+		ps, err := datastore.GetAllPostings()
 		if err != nil {
 			fmt.Errorf("%v", err)
 			http.Error(w, err.Error(), http.StatusInternalServerError)

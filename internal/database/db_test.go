@@ -1,4 +1,4 @@
-package service
+package database
 
 import (
 	"github.com/google/go-cmp/cmp"

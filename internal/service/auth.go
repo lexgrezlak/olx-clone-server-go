@@ -1,7 +1,6 @@
 package service
 
 import (
-	"context"
 	"errors"
 	"golang.org/x/crypto/bcrypt"
 	"net/http"
@@ -24,13 +23,13 @@ type User struct {
 	PasswordHash string `json:"passwordHash"`
 }
 
-func (db *DB) CreateUser(ctx context.Context, i SignUpInput) error {
+func (api *API) CreateUser(i SignUpInput) error {
 	ph, err := hashPassword(i.Password)
 	if err != nil {
 		return err
 	}
 
-	_, err = db.Pool.Exec(context.Background(),
+	_, err = api.Db.Exec(
 		`INSERT INTO public.user ("firstName", "lastName", "email", "passwordHash") VALUES ($1, $2, $3, $4)`,
 		i.FirstName, i.LastName, i.Email, ph)
 
@@ -40,8 +39,8 @@ func (db *DB) CreateUser(ctx context.Context, i SignUpInput) error {
 	return nil
 }
 
-func (db *DB) ValidateUser(ctx context.Context, email, password string) (*User, error) {
-	user, err := db.GetUserByEmail(email)
+func (api *API) ValidateUser(email, password string) (*User, error) {
+	user, err := api.GetUserByEmail(email)
 	if err != nil {
 		return nil, err
 	}

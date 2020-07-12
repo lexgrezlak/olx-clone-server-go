@@ -9,7 +9,7 @@ import (
 	"olx-clone-server/internal/util"
 )
 
-func CreatePosting(datastore PostingDatastore) http.HandlerFunc {
+func CreatePosting(datastore service.PostingDatastore) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var i service.CreatePostingInput
 		err := util.DecodeJSONBody(w, r, &i)
@@ -26,7 +26,7 @@ func CreatePosting(datastore PostingDatastore) http.HandlerFunc {
 		}
 
 		//Create the posting in the db with the given input
-		err = datastore.CreatePosting(r.Context(), i)
+		err = datastore.CreatePosting(i)
 		if err != nil {
 			fmt.Errorf("%v", err)
 			w.WriteHeader(http.StatusBadRequest)

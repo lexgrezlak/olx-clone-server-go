@@ -4,6 +4,7 @@ import (
 	"errors"
 	"log"
 	"net/http"
+	"olx-clone-server/internal/service"
 	"olx-clone-server/internal/util"
 )
 
@@ -14,7 +15,7 @@ type signInInput struct {
 	Password string `json:"password"`
 }
 
-func SignIn(datastore UserDatastore) http.HandlerFunc {
+func SignIn(datastore service.UserDatastore) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var i signInInput
 		err := util.DecodeJSONBody(w, r, &i)
@@ -32,7 +33,7 @@ func SignIn(datastore UserDatastore) http.HandlerFunc {
 		}
 
 		// Verify if the credentials are correct.
-		u, err := datastore.ValidateUser(r.Context(), i.Email, i.Password)
+		u, err := datastore.ValidateUser(i.Email, i.Password)
 		if err != nil {
 			msg := "Wrong credentials"
 			http.Error(w, msg, http.StatusUnauthorized)

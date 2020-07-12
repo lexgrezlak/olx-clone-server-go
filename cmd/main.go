@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"olx-clone-server/internal/config"
+	"olx-clone-server/internal/database"
 	"olx-clone-server/internal/handler"
 	"olx-clone-server/internal/middleware"
 	"olx-clone-server/internal/service"
@@ -19,16 +20,17 @@ func main() {
 	if err := config.LoadConfig(os.Getenv("configPath"), "config", &c); err != nil {
 		panic(err)
 	}
-	db, err := service.NewDB(&c)
+	db, err := database.NewDB(&c)
 	if err != nil {
 		panic (err)
 	}
+	api := &service.API{Db: db}
 
 	r := mux.NewRouter()
-	r.HandleFunc("/postings", handler.AllPostings(db)).Methods("GET")
-	r.HandleFunc("/postings", handler.CreatePosting(db)).Methods("POST")
-	r.HandleFunc("/auth/sign-in", handler.SignIn(db)).Methods("POST")
-	r.HandleFunc("/auth/sign-up", handler.SignUp(db)).Methods("POST")
+	r.HandleFunc("/postings", handler.AllPostings(api)).Methods("GET")
+	r.HandleFunc("/postings", handler.CreatePosting(api)).Methods("POST")
+	r.HandleFunc("/auth/sign-in", handler.SignIn(api)).Methods("POST")
+	r.HandleFunc("/auth/sign-up", handler.SignUp(api)).Methods("POST")
 
 	r.Use(middleware.LoggerMiddleware)
 	r.Use(mux.CORSMethodMiddleware(r))
