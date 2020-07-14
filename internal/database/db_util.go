@@ -16,7 +16,7 @@ import (
 	"time"
 )
 
-func NewTestDatabaseWithConfig(tb testing.TB) (*sqlx.DB, *Config){
+func NewTestDatabaseWithConfig(tb testing.TB) (*sqlx.DB, *Config) {
 	tb.Helper()
 
 	ctx := context.Background()
@@ -30,9 +30,9 @@ func NewTestDatabaseWithConfig(tb testing.TB) (*sqlx.DB, *Config){
 	// Start the container.
 	dbname, user, password := "test-olx-clone-go", "test-user", "test-password"
 	container, err := pool.RunWithOptions(&dockertest.RunOptions{
-		Repository:   "postgres",
-		Tag:          "12-alpine",
-		Env:         []string{
+		Repository: "postgres",
+		Tag:        "12-alpine",
+		Env: []string{
 			"LANG=C",
 			"POSTGRES_DB=" + dbname,
 			"POSTGRES_USER=" + user,
@@ -59,9 +59,9 @@ func NewTestDatabaseWithConfig(tb testing.TB) (*sqlx.DB, *Config){
 	// Build the connection URL.
 	connURL := &url.URL{
 		Scheme: "postgres",
-		User: url.UserPassword(user, password),
-		Host: host,
-		Path: dbname,
+		User:   url.UserPassword(user, password),
+		Host:   host,
+		Path:   dbname,
 	}
 	q := connURL.Query()
 	q.Add("sslmode", "disable")

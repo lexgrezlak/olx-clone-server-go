@@ -23,9 +23,9 @@ func TestDBValues(t *testing.T) {
 				Port:     "3242",
 			},
 			want: map[string]string{
-				"dbname": "testingDb",
+				"dbname":   "testingDb",
 				"password": "password123",
-				"port": "3242",
+				"port":     "3242",
 			},
 		},
 	}

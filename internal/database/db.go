@@ -12,8 +12,6 @@ import (
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 )
 
-
-
 // Sets up the config connections using the provided configuration
 func NewDB(config *Config) (*sqlx.DB, error) {
 	connStr := dbConnectionString(config)
@@ -24,7 +22,6 @@ func NewDB(config *Config) (*sqlx.DB, error) {
 	}
 	return db, nil
 }
-
 
 // dbConnectionString builds a connection string suitable for the pgx
 // Postgres driver, using the values of vars

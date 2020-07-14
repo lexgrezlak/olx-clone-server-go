@@ -11,7 +11,7 @@ func NewTestAPI() (*api, *sql.DB, sqlmock.Sqlmock, error) {
 	sqlDB, mock, err := sqlmock.New()
 	if err != nil {
 		fmt.Printf("an error occurred while creating mock DB connection: %s", err)
-		return nil, nil,nil, err
+		return nil, nil, nil, err
 	}
 	// DB of type *sqlx.DB is needed.
 	sqlxDB := sqlx.NewDb(sqlDB, "sqlmock")

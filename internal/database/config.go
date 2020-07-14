@@ -8,12 +8,12 @@ import (
 )
 
 type Config struct {
-	Name string `json:"name"`
-	User string `json:"user"`
+	Name     string `json:"name"`
+	User     string `json:"user"`
 	Password string `json:"password"`
-	Host string `json:"host"`
-	Port string `json:"port"`
-	SSLMode string `json:"sslmode"`
+	Host     string `json:"host"`
+	Port     string `json:"port"`
+	SSLMode  string `json:"sslmode"`
 }
 
 func (c *Config) DatabaseConfig() *Config {
