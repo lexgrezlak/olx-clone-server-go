@@ -44,7 +44,6 @@ func DecodeJSONBody(w http.ResponseWriter, r *http.Request, dst interface{}) err
 	// Set up the decoder
 	dec := json.NewDecoder(r.Body)
 
-
 	// This will cause Decode() to return a "json: unknown field ..." error
 	// if it encounters any extra unexpected fields in the JSON. Strictly
 	// speaking, it returns an error for "keys which do not match any
@@ -53,7 +52,6 @@ func DecodeJSONBody(w http.ResponseWriter, r *http.Request, dst interface{}) err
 
 	// Store the request's decoded body in i
 	err := dec.Decode(&dst)
-
 
 	if err != nil {
 		var syntaxError *json.SyntaxError
